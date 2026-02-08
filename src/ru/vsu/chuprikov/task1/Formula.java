@@ -11,6 +11,14 @@ public class Formula {
         this.variables = new ArrayList<>();
     }
 
+    public String getFormula() {
+        return formula;
+    }
+
+    public List<Character> getVariables() {
+        return variables;
+    }
+
     private void parseFormula(String formula) {
         variables.clear();
         for (char c : formula.toCharArray()) {
@@ -21,6 +29,8 @@ public class Formula {
     }
 
     private double calculate(Map<Character, Double> valuesMap) {
+        String formula = this.formula;
+
         for (Character key : valuesMap.keySet()) {
             formula = formula.replaceAll(String.valueOf(key), String.valueOf(valuesMap.get(key)));
         }
@@ -68,11 +78,14 @@ public class Formula {
             }
             leftIndex++;
             while (rightIndex < formula.length() && isNumber(formula.charAt(rightIndex))) {
+                if (formula.charAt(rightIndex) == '-' && rightIndex > index + 1) {
+                    break;
+                }
                 rightIndex++;
             }
             double left = Double.parseDouble(formula.substring(leftIndex, index));
             double right = Double.parseDouble(formula.substring(index + 1, rightIndex));
-            double result = formula.contains("*") ? left * right : left / right;
+            double result = formula.substring(leftIndex, rightIndex).contains("*") ? left * right : left / right;
             formula = formula.replace(formula.substring(leftIndex, rightIndex), String.valueOf(result));
         }
 
