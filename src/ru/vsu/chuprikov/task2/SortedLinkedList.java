@@ -22,9 +22,27 @@ public class SortedLinkedList<T> implements Iterable<T> {
         }
     }
 
-    protected Node<T> head = null;
-    protected Node<T> tail = null;
-    protected int size = 0;
+    protected Node<T> head;
+    protected Node<T> tail;
+    protected int size;
+
+    public SortedLinkedList() {
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+    }
+
+    public SortedLinkedList(T value) {
+        this();
+        add(value);
+    }
+
+    public SortedLinkedList(T... values) {
+        this();
+        for (T value : values) {
+            add(value);
+        }
+    }
 
     protected void checkEmpty() throws SortedLinkedListException {
         if (isEmpty()) {
