@@ -162,9 +162,9 @@ public class WindowApp extends JFrame {
         for (String token : tokens) {
             if (token.isEmpty()) continue;
             try {
-                list.add(Integer.parseInt(token));
+                list.addLast(Integer.parseInt(token));
             } catch (NumberFormatException e) {
-                list.add(Double.parseDouble(token));
+                list.addLast(Double.parseDouble(token));
             }
         }
         return list;
@@ -177,9 +177,9 @@ public class WindowApp extends JFrame {
         for (String token : tokens) {
             if (token.isEmpty()) continue;
             try {
-                list.add(Integer.parseInt(token));
+                list.addLast(Integer.parseInt(token));
             } catch (NumberFormatException e) {
-                list.add(Double.parseDouble(token));
+                list.addLast(Double.parseDouble(token));
             }
         }
         return list;

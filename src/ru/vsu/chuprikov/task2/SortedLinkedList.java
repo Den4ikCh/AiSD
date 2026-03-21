@@ -34,13 +34,13 @@ public class SortedLinkedList<T> implements Iterable<T> {
 
     public SortedLinkedList(T value) {
         this();
-        add(value);
+        addLast(value);
     }
 
     public SortedLinkedList(T... values) {
         this();
         for (T value : values) {
-            add(value);
+            addLast(value);
         }
     }
 
@@ -93,17 +93,6 @@ public class SortedLinkedList<T> implements Iterable<T> {
         size++;
     }
 
-    public void add(T value) {
-        Node<T> newTail = new Node<>(value);
-        size++;
-        if (size == 1) {
-            head = tail = newTail;
-        }
-        else {
-            tail = tail.next = newTail;
-        }
-    }
-
     public void insert(T value, int index) throws SortedLinkedListException {
         if (index == 0) {
             addFirst(value);
@@ -111,7 +100,7 @@ public class SortedLinkedList<T> implements Iterable<T> {
             if (index < 0 || index >= size()) {
                 throw new SortedLinkedListException(String.format("Неверный индекс %d", index));
             }
-            Node<T> previous = getItem(index);
+            Node<T> previous = getItem(index - 1);
             Node<T> newNode = new Node<>(value, previous.next);
             previous.next = newNode;
             if (size == index) {

@@ -2,7 +2,6 @@ package ru.vsu.chuprikov.task1;
 
 public class Main {
     public static void main(String[] args) {
-        Formula formula = new Formula();
         try {
             System.out.println("=== Пример 1 ===");
             Formula f1 = new Formula();
@@ -40,7 +39,6 @@ public class Main {
             System.out.println("Результат: " + f5.execute(1, 2, 3, 1, 4, 2, 5, 1));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
         }
     }
 }

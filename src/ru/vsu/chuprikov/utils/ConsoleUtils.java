@@ -168,13 +168,13 @@ public class ConsoleUtils {
                     if (token.isEmpty()) continue;
 
                     try {
-                        currentList.add(Integer.parseInt(token));
+                        currentList.addLast(Integer.parseInt(token));
                     } catch (NumberFormatException e1) {
                         try {
-                            currentList.add(Long.parseLong(token));
+                            currentList.addLast(Long.parseLong(token));
                         } catch (NumberFormatException e2) {
                             try {
-                                currentList.add(Double.parseDouble(token));
+                                currentList.addLast(Double.parseDouble(token));
                             } catch (NumberFormatException e3) {
                                 System.out.println("Не удалось распарсить число: " + token);
                             }

@@ -2,9 +2,7 @@ package ru.vsu.chuprikov.task2;
 
 import ru.vsu.chuprikov.utils.ConsoleUtils;
 import ru.vsu.chuprikov.utils.InputArgs;
-
 import java.io.FileNotFoundException;
-import java.util.List;
 
 class ConsoleApp {
     public static void main(String[] args) {
