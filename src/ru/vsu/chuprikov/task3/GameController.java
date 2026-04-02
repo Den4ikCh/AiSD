@@ -124,14 +124,14 @@ public class GameController {
                     continue;
                 }
 
-                String[] cardStrings = line.split("[ ,]+");
+                String[] cardStrings = line.split("\\s+");
                 for (String cardStr : cardStrings) {
                     if (cardStr.isEmpty()) continue;
 
                     String rankStr;
                     String suitStr;
 
-                    if (cardStr.length() == 3 && cardStr.charAt(1) == '1' && cardStr.charAt(2) == '0') {
+                    if (cardStr.startsWith("10")) {
                         rankStr = "10";
                         suitStr = cardStr.substring(2);
                     } else {
@@ -249,76 +249,82 @@ public class GameController {
 
     private String resolveConflict(Card card1, Card card2) throws QueueException {
         StringBuilder conflictLog = new StringBuilder();
-        conflictLog.append("Спор!\n");
+        conflictLog.append("СПОР!\n");
 
         List<Card> conflictCards = new ArrayList<>();
         conflictCards.add(card1);
         conflictCards.add(card2);
 
         while (true) {
-            if (sizePlayer1() < 3 || sizePlayer2() < 3) {
-                String winner = determineWinnerByCards();
-                if (winner.equals("player1")) {
-                    conflictLog.append("У игрока 2 не хватило карт! Игрок 1 побеждает!");
-                    for (Card c : conflictCards) {
-                        addToPlayer1(c);
-                    }
-                } else {
-                    conflictLog.append("У игрока 1 не хватило карт! Игрок 2 побеждает!");
-                    for (Card c : conflictCards) {
-                        addToPlayer2(c);
-                    }
+            conflictLog.append("Выкладываем дополнительные карты.\n");
+
+            Card extraCard1 = null;
+            Card extraCard2 = null;
+
+            if (sizePlayer1() == 0) {
+                conflictLog.append("У игрока 1 нет карт! Игрок 2 забирает все карты спора.\n");
+                for (Card c : conflictCards) {
+                    addToPlayer2(c);
                 }
                 gameLog.add(conflictLog.toString());
                 return conflictLog.toString();
             }
 
-            Card p1Card1 = pollFromPlayer1();
-            Card p1Card2 = pollFromPlayer1();
-            Card p1Card3 = pollFromPlayer1();
-            Card p2Card1 = pollFromPlayer2();
-            Card p2Card2 = pollFromPlayer2();
-            Card p2Card3 = pollFromPlayer2();
+            if (sizePlayer2() == 0) {
+                conflictLog.append("У игрока 2 нет карт! Игрок 1 забирает все карты спора.\n");
+                for (Card c : conflictCards) {
+                    addToPlayer1(c);
+                }
+                gameLog.add(conflictLog.toString());
+                return conflictLog.toString();
+            }
 
-            conflictCards.add(p1Card1);
-            conflictCards.add(p1Card2);
-            conflictCards.add(p1Card3);
-            conflictCards.add(p2Card1);
-            conflictCards.add(p2Card2);
-            conflictCards.add(p2Card3);
+            if (sizePlayer1() == 1) {
+                conflictLog.append("У игрока 1 осталась одна карта - спор идет без промежутка.\n");
+                extraCard1 = pollFromPlayer1();
+                conflictLog.append(String.format("Игрок 1 выкладывает: %s\n", extraCard1));
+            } else {
+                Card faceDown1 = pollFromPlayer1();
+                extraCard1 = pollFromPlayer1();
+                conflictLog.append(String.format("Игрок 1 выкладывает: %s рубашкой вверх, %s\n", faceDown1, extraCard1));
+                conflictCards.add(faceDown1);
+            }
 
-            conflictLog.append(String.format("Игрок 1 выкладывает: %s, %s, %s\n",
-                    p1Card1, p1Card2, p1Card3));
-            conflictLog.append(String.format("Игрок 2 выкладывает: %s, %s, %s\n",
-                    p2Card1, p2Card2, p2Card3));
+            if (sizePlayer2() == 1) {
+                conflictLog.append("У игрока 2 осталась одна карта - спор идет без промежутка.\n");
+                extraCard2 = pollFromPlayer2();
+                conflictLog.append(String.format("Игрок 2 выкладывает: %s\n", extraCard2));
+            } else {
+                Card faceDown2 = pollFromPlayer2();
+                extraCard2 = pollFromPlayer2();
+                conflictLog.append(String.format("Игрок 2 выкладывает: %s рубашкой вверх, %s\n", faceDown2, extraCard2));
+                conflictCards.add(faceDown2);
+            }
 
-            if (p1Card3.getValue() > p2Card3.getValue()) {
+            conflictCards.add(extraCard1);
+            conflictCards.add(extraCard2);
+
+            conflictLog.append(String.format("Сравниваем: %s и %s\n", extraCard1, extraCard2));
+
+            if (extraCard1.getValue() > extraCard2.getValue()) {
                 conflictLog.append("Игрок 1 выигрывает спор!");
                 for (Card c : conflictCards) {
                     addToPlayer1(c);
                 }
                 break;
-            } else if (p2Card3.getValue() > p1Card3.getValue()) {
+            } else if (extraCard2.getValue() > extraCard1.getValue()) {
                 conflictLog.append("Игрок 2 выигрывает спор!");
                 for (Card c : conflictCards) {
                     addToPlayer2(c);
                 }
                 break;
             } else {
-                conflictLog.append("Ничья! Продолжаем спор.\n");
+                conflictLog.append("Снова ничья! Продолжаем спор.\n");
             }
         }
 
         gameLog.add(conflictLog.toString());
         return conflictLog.toString();
-    }
-
-    private String determineWinnerByCards() {
-        if (sizePlayer1() > sizePlayer2()) {
-            return "player1";
-        } else {
-            return "player2";
-        }
     }
 
     public boolean isGameOver() {

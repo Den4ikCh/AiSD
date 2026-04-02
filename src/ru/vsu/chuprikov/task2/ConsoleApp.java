@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 class ConsoleApp {
     public static void main(String[] args) {
         InputArgs inputArgs = ConsoleUtils.parseCmdArgs(args);
-        String path = System.getProperty("user.dir") + "\\src\\ru\\vsu\\chuprikov\\task2\\";
+        String path = System.getProperty("user.dir") + "\\src\\ru\\vsu\\chuprikov\\task3\\";
         try {
             SortedLinkedList<Number>[] lists = ConsoleUtils.readTwoListsFromFile(path + inputArgs.inputFile);
             SortedLinkedList<Number> result = SortedLinkedList.combine(lists[0], lists[1]);
