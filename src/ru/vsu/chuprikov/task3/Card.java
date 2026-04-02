@@ -1,6 +1,6 @@
 package ru.vsu.chuprikov.task3;
 
-public class Card {
+public class Card implements Comparable<Card> {
     private final String suit;
     private final String rank;
     private final int value;
@@ -16,6 +16,11 @@ public class Card {
 
     public int getValue() {
         return value;
+    }
+
+    @Override
+    public int compareTo(Card other) {
+        return Integer.compare(this.value, other.value);
     }
 
     @Override
