@@ -1,0 +1,2 @@
+42 18 95 7 63 31 84 50 26 79
+Russia USA China India Brazil Germany France Japan Italy Canada
